@@ -9,6 +9,10 @@ import javax.ws.rs.core.Application;
 @ApplicationPath("")
 public class BaseApplication extends Application {
 
+    /*
+     * (non-Javadoc)
+     * @see javax.ws.rs.core.Application#getClasses()
+     */
     @Override
     public Set<Class<?>> getClasses() {
         return Collections.emptySet();

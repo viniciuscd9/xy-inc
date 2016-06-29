@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,6 +21,7 @@ import com.github.viniciuscd.xyinc.model.Endereco;
  *
  */
 public class BuscaCepPresenterImpl implements IBuscaCepPresenter {
+    private static final Logger LOGGER = Logger.getLogger(BuscaCepPresenterImpl.class);
     private static final BuscaCepPresenterImpl INSTANCE = new BuscaCepPresenterImpl();
 
     private static final String BUSCA_CEP_ENDERECO_URL = "http://www.buscacep.correios.com.br/sistemas/buscacep/resultadoBuscaCepEndereco.cfm";
@@ -52,6 +54,7 @@ public class BuscaCepPresenterImpl implements IBuscaCepPresenter {
         List<Endereco> valores = this.parseEnderecos(cep);
 
         if (valores.isEmpty()) {
+            LOGGER.warn("O CEP [" + cep + "] nao foi encontrado");
             throw new NotFoundServiceException("CEP nao encontrado.");
         }
 
@@ -63,10 +66,11 @@ public class BuscaCepPresenterImpl implements IBuscaCepPresenter {
      * @see com.github.viniciuscd.xyinc.session.BuscaCepSession#buscaCep(java.lang.String)
      */
     @Override
-    public Endereco buscaEndereco(String logradouro) throws ServiceException {
-        List<Endereco> valores = this.parseEnderecos(logradouro);
+    public Endereco buscaEndereco(String endereco) throws ServiceException {
+        List<Endereco> valores = this.parseEnderecos(endereco);
 
         if (valores.isEmpty()) {
+            LOGGER.warn("O endereco [" + endereco + "] nao foi encontrado");
             throw new NotFoundServiceException("Logradouro nao encontrado.");
         }
 
@@ -102,6 +106,7 @@ public class BuscaCepPresenterImpl implements IBuscaCepPresenter {
 
 
         } catch (IOException e) {
+            LOGGER.error("Erro ao estabelecer conexao", e);
             throw new ServiceException("Erro ao relizar conexao com site [" + BUSCA_CEP_ENDERECO_URL + "]", e);
         }
 
@@ -121,10 +126,10 @@ public class BuscaCepPresenterImpl implements IBuscaCepPresenter {
             if (!firstElement) {
                 if (e.children().size() == 4) {
                     Endereco endereco = new Endereco();
-                    endereco.setLogradouro(e.child(0).html());
-                    endereco.setBairro(e.child(1).html());
-                    endereco.setLocalidade(e.child(2).html());
-                    endereco.setCep(e.child(3).html());
+                    endereco.setLogradouro(e.child(0).html().replaceAll("&nbsp;", "").trim());
+                    endereco.setBairro(e.child(1).html().replaceAll("&nbsp;", "").trim());
+                    endereco.setLocalidade(e.child(2).html().replaceAll("&nbsp;", "").trim());
+                    endereco.setCep(e.child(3).html().replaceAll("&nbsp;", "").trim());
 
                     resultado.add(endereco);
                 }

@@ -52,7 +52,7 @@ public class BuscaCepPresenterTest {
                 .append("<td>Header3</td>")
                 .append("</tr>")
                 .append("<tr>")
-                .append("<td>Endereco0</td>")
+                .append("<td>Endereco0&nbsp;</td>")
                 .append("<td>Endereco1</td>")
                 .append("<td>Endereco2</td>")
                 .append("<td>Endereco3</td>")
@@ -83,10 +83,10 @@ public class BuscaCepPresenterTest {
         Endereco result = this.buscaCepPresenter.buscaEndereco(FULL_ARGUMENT);
 
         Assert.assertNotNull(result);
-        Assert.assertEquals(result.getLogradouro(), "Endereco0");
-        Assert.assertEquals(result.getBairro(), "Endereco1");
-        Assert.assertEquals(result.getLocalidade(), "Endereco2");
-        Assert.assertEquals(result.getCep(), "Endereco3");
+        Assert.assertEquals("Endereco0", result.getLogradouro());
+        Assert.assertEquals("Endereco1", result.getBairro());
+        Assert.assertEquals("Endereco2", result.getLocalidade());
+        Assert.assertEquals("Endereco3", result.getCep());
     }
 
     @Test(expected = NotFoundServiceException.class)

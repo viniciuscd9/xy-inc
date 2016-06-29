@@ -8,6 +8,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
 import com.github.viniciuscd.xyinc.exception.ServiceException;
 import com.github.viniciuscd.xyinc.model.Endereco;
 import com.github.viniciuscd.xyinc.presenter.BuscaCepPresenterImpl;
@@ -21,6 +23,8 @@ import com.github.viniciuscd.xyinc.presenter.IBuscaCepPresenter;
  */
 @Path("/buscar")
 public class BuscaCepEndpoint {
+    private static final Logger LOGGER = Logger.getLogger(BuscaCepEndpoint.class);
+
     private IBuscaCepPresenter buscaCepSession;
 
     public BuscaCepEndpoint() {
@@ -44,25 +48,28 @@ public class BuscaCepEndpoint {
     @Path("endereco/{cep}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
     public Endereco getEndereco(@PathParam("cep") String cep) throws ServiceException {
+        String cepFormatado;
 
         if (cep !=  null) {
-            cep = cep.replaceAll("[^0-9]", "");	//remove caracteres nao numericos
+            cepFormatado = cep.replaceAll("[^0-9]", "");	//remove caracteres nao numericos
 
-            if (cep.length() != 8) {
+            if (cepFormatado.length() != 8) {
+                LOGGER.warn("Cep Incorreto: " + cep);
                 throw new IllegalArgumentException("O CEP deve conter 8 caracteres numericos.");
             }
 
         } else {
+            LOGGER.warn("Cep nulo");
             throw new IllegalArgumentException("O CEP nao foi informado.");
         }
 
-        return this.buscaCepSession.buscaEndereco(cep);
+        return this.buscaCepSession.buscaEndereco(cepFormatado);
     }
 
     /**
      * Busca CEP por logradouro.
      *
-     * @param logradouro O logradouro passado como par&acirc;metro de busca.
+     * @param endereco O endere&ccedil; passado como par&acirc;metro de busca.
      * @return Uma lista com os endere&ccedil;os contendo o CEP dos logradouros retornados.
      * @throws ServiceException Caso haja erro relacionado &acirc; busca.
      * @throws IllegalArgumentException Caso o par&acirc;metro passado seja inv&aacute;lido.
@@ -70,13 +77,14 @@ public class BuscaCepEndpoint {
     @GET
     @Path("cep/{endereco}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    public List<Endereco> getCeps(@PathParam("logradouro") String logradouro) throws ServiceException {
+    public List<Endereco> getCeps(@PathParam("endereco") String endereco) throws ServiceException {
 
-        if (logradouro == null || logradouro.trim().isEmpty()) {
+        if (endereco == null || endereco.trim().isEmpty()) {
+            LOGGER.warn("Endereco vazio: " + endereco);
             throw new IllegalArgumentException("O logradouro nao foi informado");
         }
 
-        return this.buscaCepSession.buscaCeps(logradouro);
+        return this.buscaCepSession.buscaCeps(endereco);
     }
 
 }

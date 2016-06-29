@@ -48,7 +48,7 @@ public class BuscaCepEndpointTest {
     public void buscaEnderecosSuccess() throws ServiceException {
         Endereco result = this.buscaCepEndpoint.getEndereco("12400-800");
 
-        Assert.assertEquals(result, RETURN_ENDERECO_TEST);
+        Assert.assertEquals(RETURN_ENDERECO_TEST, result);
 
         Mockito.verify(this.buscaCepPresenter).buscaEndereco("12400800");
     }

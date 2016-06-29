@@ -8,7 +8,7 @@ Serviço RESTful para busca por CEP ou Endereço no site dos correios.
 
 ## Instruções para compilação e execução.
 
-Para compilar o código execute:
+Para compilar o código execute os comandos dentro do diretório xy-inc da aplicação:
 
     MAVEN_HOME/bin/mvn install
 
@@ -17,6 +17,8 @@ Para executar o código:
     MAVEN_HOME/bin/mvn jetty:run
 
 Onde MAVEN_HOME é o caminho no qual o maven foi instalado no sistema.
+
+Para parar a execução pressione CTRL+C.
 
 ### Execução dos serviços.
 

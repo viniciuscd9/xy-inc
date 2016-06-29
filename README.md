@@ -36,7 +36,9 @@ Onde:
 * Status: 400 - Caso o parâmetro passado para busca seja inválido.
 * Status: 404 - Caso a busca não retorne nenhum valor.
 * Status: 500 - Caso ocorra erro de conexão ou algum erro imprevisto.
+
 #### Formato de resposta:
+
 * `http://hostname:8080/buscar/cep/{logradouro}`:
 
 Status: 200
